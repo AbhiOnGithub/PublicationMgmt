@@ -1,2 +1,5 @@
 ### Check Health
 curl http://localhost:8080/api/health
+
+### Get list of Books
+curl http://localhost:8080/api/book

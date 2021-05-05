@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/abhiongithub/publicationmgmt/internal/database"
+	"github.com/abhiongithub/publicationmgmt/internal/services"
 	transportHttp "github.com/abhiongithub/publicationmgmt/internal/transport/http"
 )
 
@@ -13,7 +15,15 @@ type App struct {
 func (app *App) Run() error {
 	fmt.Println("Setting up our App")
 
-	handler := transportHttp.NewHandler()
+	db, err := database.NewDatabase()
+
+	if err != nil {
+		return err
+	}
+
+	bookService := services.NewService(db)
+
+	handler := transportHttp.NewHandler(bookService)
 	handler.SetupRoutes()
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
